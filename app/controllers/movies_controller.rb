@@ -30,7 +30,9 @@ class MoviesController < ApplicationController
     if params[:sort_by]
       session[:sort_by] = params[:sort_by]
     else
-      session[:sort_by] = "id"
+      if session[:sort_by].nil?
+        session[:sort_by] = "id"
+      end
     end
 
     if params[:ratings].nil? || params[:sort_by].nil?
