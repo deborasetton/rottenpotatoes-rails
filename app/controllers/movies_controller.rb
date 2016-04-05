@@ -15,14 +15,27 @@ class MoviesController < ApplicationController
 
     if params[:ratings].nil?
       if session[:ratings].nil?
-        params[:ratings] = {}
+        # Não veio nada, e não tinha nada guardado.
+        # Cria e popula a sessão
+        session[:ratings] = {}
         @all_ratings.each do |r|
-          params[:ratings][r] = 1
+          session[:ratings][r] = 1
         end
-        session[:ratings] = params[:ratings]
       end
     else
+      # Veio params
       session[:ratings] = params[:ratings]
+    end
+
+    if params[:sort_by]
+      session[:sort_by] = params[:sort_by]
+    else
+      session[:sort_by] = "id"
+    end
+
+    if params[:ratings].nil? || params[:sort_by].nil?
+      redirect_to movies_url(sort_by: session[:sort_by], ratings: session[:ratings])
+      return
     end
 
     @movies = Movie.where(rating: session[:ratings].keys)
@@ -33,12 +46,6 @@ class MoviesController < ApplicationController
     elsif params[:sort_by].to_s == 'release_date'
       @sort_by_release_date = 'hilite'
       @movies = @movies.order(params[:sort_by])
-    end
-
-    if params[:sort_by].nil? && session[:sort_by]
-      redirect_to movies_url(sort_by: session[:sort_by], ratings: session[:ratings])
-    else
-      session[:sort_by] = params[:sort_by]
     end
   end
 
