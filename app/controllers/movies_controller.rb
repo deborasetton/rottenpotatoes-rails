@@ -11,35 +11,35 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @all_ratings = Movie.all_ratings
 
+    # Deal with ratings params
     if params[:ratings].nil?
       if session[:ratings].nil?
-        # Não veio nada, e não tinha nada guardado.
-        # Cria e popula a sessão
         session[:ratings] = {}
-        @all_ratings.each do |r|
+        Movie.all_ratings.each do |r|
           session[:ratings][r] = 1
         end
       end
     else
-      # Veio params
       session[:ratings] = params[:ratings]
     end
 
-    if params[:sort_by]
-      session[:sort_by] = params[:sort_by]
-    else
+    # Deal with sorting params
+    if params[:sort_by].nil?
       if session[:sort_by].nil?
         session[:sort_by] = "id"
       end
+    else
+      session[:sort_by] = params[:sort_by]
     end
 
     if params[:ratings].nil? || params[:sort_by].nil?
+      # If either of these params keys is nil, we should redirect to
+      # a RESTful URL using values stored in the session.
       redirect_to movies_url(sort_by: session[:sort_by], ratings: session[:ratings])
-      return
     end
 
+    @all_ratings = Movie.all_ratings
     @movies = Movie.where(rating: session[:ratings].keys)
 
     if params[:sort_by].to_s == 'title'
