@@ -15,6 +15,13 @@ class Movie < ActiveRecord::Base
   # Callbacks
   before_save :capitalize_title
 
+  # Scopes
+  scope :for_kids, -> { where(rating: ['G', 'PG']) }
+
+  scope :with_good_reviews, ->(threshold) {
+    joins(:reviews).group(:movie_id).having("AVG(reviews.potatoes) > ?", threshold.to_i)
+  }
+
   def self.all_ratings
     RATINGS
   end

@@ -51,6 +51,10 @@ class MoviesController < ApplicationController
       @sort_by_release_date = 'hilite'
       @movies = @movies.order(params[:sort_by])
     end
+
+    if params[:for_kids]
+      @movies = @movies.for_kids
+    end
   end
 
   def new
