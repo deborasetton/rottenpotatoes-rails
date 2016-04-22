@@ -3,6 +3,9 @@ class Movie < ActiveRecord::Base
   GRANDFATHERED_DATE = Date.parse('1 Nov 1968')
   RATINGS = %w[G PG PG-13 R NC-17]
 
+  # Associations
+  has_many :reviews
+
   # Validations
   validates :title, :release_date, presence: true
   validate  :released_1930_or_later
