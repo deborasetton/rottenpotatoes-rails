@@ -9,6 +9,13 @@
   %body
     %h1.title Rotten Potatoes!
     #main
+      #login
+      - if @current_user
+        %p.welcome Welcome, #{@current_user.name}!
+        = link_to 'Logout', logout_path
+      - else
+        %p.login= link_to 'Log in with Twitter', OmniAuth.login_path(:twitter)
+
       - if flash[:notice]
         #notice.message= flash[:notice]
       - elsif flash[:warning]

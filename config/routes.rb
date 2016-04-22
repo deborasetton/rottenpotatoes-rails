@@ -5,6 +5,13 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'movies#index'
 
+  get 'auth/:provider/callback' => 'sessions#create'
+  get 'logout'                  => 'sessions#destroy'
+
+  # Will only be called on production env.
+  get 'auth/failure'            => 'sessions#failure'
+
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
@@ -15,7 +22,7 @@ Rails.application.routes.draw do
   #   resources :products
 
   resources :movies
-  
+
   # Example resource route with options:
   #   resources :products do
   #     member do
