@@ -14,6 +14,17 @@
 
 %p#description= @movie.description
 
+%h3 Reviews:
+
+- if @movie.reviews.any?
+  %ul
+    - @movie.reviews.each do |r|
+      %li #{r.potatoes}
+- else
+  %p No reviews yet!
+
 = link_to 'Edit', edit_movie_path(@movie)
+%br
+= link_to 'New review', new_movie_review_path(@movie)
 = button_to 'Delete', movie_path(@movie), :method => :delete, :confirm => 'Are you sure?'
 = link_to 'Back to movie list', movies_path
