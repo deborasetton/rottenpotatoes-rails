@@ -4,7 +4,8 @@ class Movie < ActiveRecord::Base
   RATINGS = %w[G PG PG-13 R NC-17]
 
   # Associations
-  has_many :reviews
+  has_many :reviews, dependent: :destroy
+  has_many :moviegoers, through: :reviews
 
   # Validations
   validates :title, :release_date, presence: true
