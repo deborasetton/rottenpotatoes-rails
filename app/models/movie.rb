@@ -8,6 +8,9 @@ class Movie < ActiveRecord::Base
   validate  :released_1930_or_later
   validates :rating, inclusion: { in: RATINGS }, unless: :grandfathered?
 
+  # Callbacks
+  before_save :capitalize_title
+
   def self.all_ratings
     RATINGS
   end
@@ -20,6 +23,13 @@ class Movie < ActiveRecord::Base
 
   def grandfathered?
     release_date && release_date < GRANDFATHERED_DATE
+  end
+
+  def capitalize_title
+    self.title = title.split(/\s+/)
+                      .map(&:downcase)
+                      .map(&:capitalize)
+                      .join(' ')
   end
 
 end
